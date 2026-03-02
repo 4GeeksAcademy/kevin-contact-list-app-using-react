@@ -1,0 +1,11 @@
+.contact-card {
+  transition: box-shadow 0.2s;
+}
+
+.contact-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.contact-avatar img {
+  object-fit: cover;
+}
