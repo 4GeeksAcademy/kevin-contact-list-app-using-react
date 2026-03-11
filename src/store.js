@@ -48,7 +48,7 @@ export async function fetchContacts(dispatch) {
     const resp = await fetch(`${API_URL}/agendas/${AGENDA_SLUG}/contacts`);
     if (!resp.ok) throw new Error("Failed to fetch contacts");
     const data = await resp.json();
-    dispatch({ type: "set_contacts", payload: data });
+    dispatch({ type: "set_contacts", payload: data.contacts || data });
   } catch (err) {
     console.error("Error fetching contacts:", err);
   }
