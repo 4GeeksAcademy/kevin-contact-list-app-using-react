@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { fetchContacts, deleteContact } from "../store";
 import { ContactCard } from "../components/ContactCard";
@@ -23,9 +22,6 @@ export const Contacts = () => {
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Contacts</h1>
-        <Link to="/add-contact" className="btn btn-success">
-          <i className="fas fa-plus me-2"></i>Add New Contact
-        </Link>
       </div>
 
       {store.contacts.length === 0 ? (

@@ -58,11 +58,11 @@ export async function fetchContacts(dispatch) {
 export async function createContact(dispatch, contact) {
   try {
     await createAgenda();
-    const { full_name, ...rest } = contact;
+    const payload = { name: contact.full_name, email: contact.email, phone: contact.phone, address: contact.address };
     const resp = await fetch(`${API_URL}/agendas/${AGENDA_SLUG}/contacts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: full_name, ...rest }),
+      body: JSON.stringify(payload),
     });
     if (!resp.ok) {
       const errorData = await resp.text();
@@ -80,13 +80,13 @@ export async function createContact(dispatch, contact) {
 
 export async function updateContact(dispatch, id, contact) {
   try {
-    const { full_name, ...rest } = contact;
+    const payload = { name: contact.full_name, email: contact.email, phone: contact.phone, address: contact.address };
     const resp = await fetch(
       `${API_URL}/agendas/${AGENDA_SLUG}/contacts/${id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: full_name, ...rest }),
+        body: JSON.stringify(payload),
       }
     );
     if (!resp.ok) throw new Error("Failed to update contact");
