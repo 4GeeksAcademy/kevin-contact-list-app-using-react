@@ -56,12 +56,17 @@ export async function fetchContacts(dispatch) {
 
 export async function createContact(dispatch, contact) {
   try {
+    await createAgenda();
     const resp = await fetch(`${API_URL}/agendas/${AGENDA_SLUG}/contacts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(contact),
     });
-    if (!resp.ok) throw new Error("Failed to create contact");
+    if (!resp.ok) {
+      const errorData = await resp.text();
+      console.error("API error:", resp.status, errorData);
+      throw new Error("Failed to create contact");
+    }
     const data = await resp.json();
     dispatch({ type: "add_contact", payload: data });
     return true;
