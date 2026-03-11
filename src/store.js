@@ -48,7 +48,8 @@ export async function fetchContacts(dispatch) {
     const resp = await fetch(`${API_URL}/agendas/${AGENDA_SLUG}/contacts`);
     if (!resp.ok) throw new Error("Failed to fetch contacts");
     const data = await resp.json();
-    dispatch({ type: "set_contacts", payload: data.contacts || data });
+    const contacts = (data.contacts || data).map((c) => ({ ...c, full_name: c.name }));
+    dispatch({ type: "set_contacts", payload: contacts });
   } catch (err) {
     console.error("Error fetching contacts:", err);
   }
@@ -57,10 +58,11 @@ export async function fetchContacts(dispatch) {
 export async function createContact(dispatch, contact) {
   try {
     await createAgenda();
+    const { full_name, ...rest } = contact;
     const resp = await fetch(`${API_URL}/agendas/${AGENDA_SLUG}/contacts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(contact),
+      body: JSON.stringify({ name: full_name, ...rest }),
     });
     if (!resp.ok) {
       const errorData = await resp.text();
@@ -68,7 +70,7 @@ export async function createContact(dispatch, contact) {
       throw new Error("Failed to create contact");
     }
     const data = await resp.json();
-    dispatch({ type: "add_contact", payload: data });
+    dispatch({ type: "add_contact", payload: { ...data, full_name: data.name } });
     return true;
   } catch (err) {
     console.error("Error creating contact:", err);
@@ -78,17 +80,18 @@ export async function createContact(dispatch, contact) {
 
 export async function updateContact(dispatch, id, contact) {
   try {
+    const { full_name, ...rest } = contact;
     const resp = await fetch(
       `${API_URL}/agendas/${AGENDA_SLUG}/contacts/${id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contact),
+        body: JSON.stringify({ name: full_name, ...rest }),
       }
     );
     if (!resp.ok) throw new Error("Failed to update contact");
     const data = await resp.json();
-    dispatch({ type: "update_contact", payload: data });
+    dispatch({ type: "update_contact", payload: { ...data, full_name: data.name } });
     return true;
   } catch (err) {
     console.error("Error updating contact:", err);
